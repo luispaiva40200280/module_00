@@ -7,6 +7,8 @@ def ft_seed_inventory(seed_type: str, quanity: int, units: int) -> None:
         print(seed_type + " seeds: " + str(quanity) + " grams total")
     elif units == "area":
         print(seed_type + " seeds: covers " + str(quanity) + " square meter")
+    else:
+        print("Unknown unit type")
 
 
 # call of the function for testing
