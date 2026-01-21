@@ -7,6 +7,7 @@ def water_plants(plant_list: list) -> None:
                 raise TypeError
             else:
                 print(f"Watering {plant}")
+                print(f"Watering {plant}")
     except TypeError:
         print(f"Error: Cannot water {plant} invalid plant!.")
     finally:
