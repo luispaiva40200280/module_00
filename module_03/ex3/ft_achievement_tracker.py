@@ -80,11 +80,15 @@ class AchievementTracker:
             s1 = p1.get_achive_name()
             s2 = p2.get_achive_name()
 
-            print(
-                f"\n{p1_name} vs {p2_name} common: {s1.intersection(s2)}"
-                f"{p1_name} unique: {s1.difference(s2)}"
-                f"{p2_name} unique: {s2.difference(s1)}"
-            )
+        if not p1 or not p2:
+            print("\none of the players dont exsist")
+            return
+
+        print(
+            f"\n{p1_name} vs {p2_name} common: {s1.intersection(s2)}\n"
+            f"{p1_name} unique: {s1.difference(s2)}\n"
+            f"{p2_name} unique: {s2.difference(s1)}\n"
+        )
 
 
 def add_players_ach(tracker: AchievementTracker) -> None:
@@ -118,17 +122,18 @@ def add_players_ach(tracker: AchievementTracker) -> None:
 
 
 def main():
-    my_tracker = AchievementTracker() 
+    my_tracker = AchievementTracker()
 
     # 2. Pass this instance to your function
     add_players_ach(my_tracker)
-    
-    # 3. Analyze
-    my_tracker.analyze()
 
-    print("=== Achievement Tracker System ===")
+    # 3. Analyze
+    print("=== Achievement Tracker System ===\n")
     for p in my_tracker.players:
-        print(f"Player {p.name} achivements: {p.achievements}")
+        print(f"Player {p.name} achivements: {p.get_achive_name()}")
+    # print()
+    my_tracker.analyze()
+    my_tracker.compare("Dio", "Peitro")
 
 
 if __name__ == "__main__":
