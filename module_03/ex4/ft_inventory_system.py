@@ -1,3 +1,4 @@
+'''needs more work and a little of cleanup'''
 from sys import argv as argv
 
 
@@ -38,7 +39,7 @@ class Player:
         return item
 
     def __repr__(self) -> str:
-        return f"<Player {self.name} as {self.inventory}"
+        return f"Player {self.name} as {set(self.inventory.values())}"
 
 
 class GameWorld:
@@ -52,7 +53,7 @@ class GameWorld:
         self.players[name] = new_player
         return new_player
 
-    def get_player(self, name: str) -> None:
+    def get_player(self, name: str) -> str:
         return self.players.get(name)
 
 
@@ -92,38 +93,88 @@ def main(argv) -> None:
                 new_item = Item(name, count)
                 player.add_item(new_item)
 
-    for player in world.players.values():
-        print(f"=== Inventory System Analysis for {player.name}===")
-        player_total = 0
-        for item in player.inventory.values():
-            player_total += item.count
-        print(f"List of items : {player.inventory.keys()}")
-        print(f"Total items in inventory: {list(player.inventory.values())}")
-        print(f"Total items in inventory: {player_total}")
-    print("-" * 45 + "\n")
-
     items_all = set()
     for player in world.players.values():
         for name_item in player.inventory.values():
             items_all.add(name_item.get_name())
     print(f"All Items in the game: {items_all}")
     print(f"Number of all Items: {len(items_all)}")
+    print("-" * 45)
+
+    for player in world.players.values():
+        print(f"\n=== Inventory System Analysis for {player.name}===\n")
+        player_total = 0
+        for item in player.inventory.values():
+            player_total += item.count
+        print(f"List of items : {set(player.inventory.keys())}")
+        print(world.get_player(player.name))
+        print(f"Total items in inventory: {player_total}")
     print("-" * 45 + "\n")
 
     for player in world.players.values():
         print(f"=== Inventory System Analysis for {player.name} ===")
         total_items_player = player.count_all_items
+        # names of min or max items name for the player inventory
+        max_item_name = ""
+        min_item_name = ""
+        # store of min or max items values for the player inventory
+        max_item_number = 0
+        min_item_number = 1
+        list_items_to_buy = set()
+        list_items_to_sell = set()
         for item in player.inventory.values():
             item_percentege = (item.count / total_items_player) * 100
             print(f"{item} unites ({item_percentege:.1f}%)")
-        print(f"\n=== Inventory Statistics for {player.name} ===")
-        
-        print(max(set(player.inventory.values().count)))
-        
+            # find the most abondent item
+            if item.count > max_item_number:
+                max_item_number = item.count
+                max_item_name = item.name
+            # find the least abondent item
+            if item.count <= min_item_number:
+                min_item_number = item.count
+                min_item_name = item.name
+            if item.count <= 3:
+                list_items_to_buy.add(item.name)
+            if item.count >= 9:
+                list_items_to_sell.add(item.name)
 
+        print(f"\n=== Inventory Statistics for {player.name} ===")
+        print(f"Most abundant: {max_item_name} ({max_item_number} units)")
+        print(f"Least abundant: {min_item_name} ({min_item_number} units)")
+        print("=== Management Suggestions ===")
+        print(f"restock needeed: {list_items_to_buy}")
+        if len(list_items_to_sell) > 0:
+            print(f"try and sell: {list_items_to_sell}")
     print()
-    pass
+
+
+def dictionary_demo():
+    # 1. Create the dictionary with the data shown
+    inventory = {
+        "sword": 1,
+        "potion": 5,
+        "shield": 2,
+        "armor": 3,
+        "helmet": 1
+    }
+
+    print("=== Dictionary Properties Demo ===")
+
+    # 2. Get keys as a list
+    # .keys() returns a "view", so we wrap it in list() to look like ['a', 'b']
+    print(f"Dictionary keys: {list(inventory.keys())}")
+
+    # 3. Get values as a list
+    print(f"Dictionary values: {list(inventory.values())}")
+
+    # 4. Check if a key exists
+    # 'sword' in inventory returns True or False
+    check = "sword" in inventory
+    print(f"Sample lookup - 'sword' in inventory: {check}")
 
 
 if __name__ == "__main__":
-    main(argv)
+    if len(argv) == 2 and argv[1] == "demo":
+        dictionary_demo()
+    else:
+        main(argv)
